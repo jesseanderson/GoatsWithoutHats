@@ -59,6 +59,10 @@ class Vision(object):
             cv2.circle(frame,(cx,cy),5,(0,0,255),-1)
             cv2.circle(frame,(self.animal_locs[index][0],self.animal_locs[index][1]),
                        10,(0,0,255),-1)
+          elif color == 1: #BLUE
+            cv2.circle(frame,(cx,cy),5,255,-1)
+            cv2.circle(frame,(self.animal_locs[index][0],self.animal_locs[index][1]),
+                       10,255,-1)
           elif color == 2: #BLACK
             cv2.circle(frame,(cx,cy),5,0,-1)
             cv2.circle(frame,(self.animal_locs[index][0],self.animal_locs[index][1]),
@@ -73,8 +77,8 @@ class Vision(object):
 
   def move_animal(self, index):
     (x, y, dx, dy) = self.animal_locs[index]
-    newdx = int(dx + 5 * (random.random() - 0.5))
-    newdy = int(dy + 5 * (random.random() - 0.5))
+    newdx = int(dx + 15 * (random.random() - 0.5))
+    newdy = int(dy + 15 * (random.random() - 0.5))
     """Keep the animal on the screen(ish)"""
     if x < 0:
       x = x + 2 * abs(dx)
@@ -163,7 +167,7 @@ class Game(object):
   def send_status(self, color):
     #VARIABLES TO CHANGE TO DETERMINE CORRECT VALUES
     radius_ratio = .7
-    win_ring_radius = 10
+    win_ring_radius = 30
     WIN_SOUND = 9
     ################################################
     #Find the player
