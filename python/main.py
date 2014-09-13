@@ -109,6 +109,12 @@ class Game(object):
       animal_y = int(random.random() * self.vision.height)
     self.animals.append((animal_x, animal_y, 0, 0))
     self.vision.animal_locs.append((animal_x, animal_y, 0, 0))
+    print "ADDING:"
+    print self.players
+    print self.animals
+    print self.vision.tracking
+    print self.vision.previous_locs
+    print self.vision.animal_locs
 
   def remove_player(self, color):
     #Remove from game player list
@@ -141,6 +147,12 @@ class Game(object):
     for loc in removeQueue:
       self.vision.animal_locs.remove(loc)
 
+    print "REMOVING:"
+    print self.players
+    print self.animals
+    print self.vision.tracking
+    print self.vision.previous_locs
+    print self.vision.animal_locs
 
   def send_status(self, color):
     #VARIABLES TO CHANGE TO DETERMINE CORRECT VALUES
@@ -149,11 +161,12 @@ class Game(object):
     WIN_SOUND = 9
     ################################################
     #Find the player
-    for p in self.players:
-      if(p[0] == color):
-        player_id = p[1]
+    for p in xrange(len(self.players)):
+      if(self.players[p][0] == color):
+        player_id = p
         break
 
+    print player_id
     pX, pY = self.vision.previous_locs[player_id]
     aX, aY = self.vision.animal_locs[player_id][0], self.vision.animal_locs[player_id][1]
     h, w = self.vision.height, self.vision.width
