@@ -2,6 +2,7 @@ import sys
 import numpy as np
 import random
 import cv2
+import copy
 from server import server
 
 """Global Constants go here in CAPS"""
@@ -55,17 +56,17 @@ class Vision(object):
           self.move_animal(index)
           """Drawing Circles"""
           if color == 0: #RED
-            cv2.circle(frame,(cx,cy),5,CV2.scalar(0,0,255),-1)
+            cv2.circle(frame,(cx,cy),5,np.scalar(0,0,255),-1)
             cv2.circle(frame,(self.animal_locs[index][0],self.animal_locs[index][1]),
-                       10,CV2.scalar(0,0,255),-1)
+                       10,np.scalar(0,0,255),-1)
           elif color == 1: #BLUE
             cv2.circle(frame,(cx,cy),5,255,-1)
             cv2.circle(frame,(self.animal_locs[index][0],self.animal_locs[index][1]),
                        10,255,-1)
           elif color == 2: #ORANGE
-            cv2.circle(frame,(cx,cy),5,CV2.scalar(0,128,255),-1)
+            cv2.circle(frame,(cx,cy),5,np.scalar(0,128,255),-1)
             cv2.circle(frame,(self.animal_locs[index][0],self.animal_locs[index][1]),
-                       10,CV2.scalar(0,128,255),-1)
+                       10,np.scalar(0,128,255),-1)
           
           
       """End Tracking"""
@@ -119,50 +120,48 @@ class Game(object):
       animal_y = int(random.random() * self.vision.height)
     self.animals.append((animal_x, animal_y, 0, 0))
     self.vision.animal_locs.append((animal_x, animal_y, 0, 0))
-    print "ADDING:"
-    print self.players
-    print self.animals
-    print self.vision.tracking
-    print self.vision.previous_locs
-    print self.vision.animal_locs
+
+  def getIndexFromID(self, i, players):
+    for x in xrange(len(players)):
+      if(players[x][1] == i):
+        return x
 
   def remove_player(self, color):
     #Remove from game player list
-    removedPlayerIDs = []
+    removedPlayers = []
+    #Used to hold players so we can reference but delete from master
+    tempPlayers = copy.deepcopy(self.players)
     #List of values that we will remove after finding
     removeQueue = []
     for player in self.players:
       c = player[0]
       if(c == color):
-        removedPlayerIDs.append(player[1])
+        removedPlayers.append(player[1])
         self.players.remove(player)
         self.vision.tracking.remove(player)
 
     #Go through player ID's and add to removeQueue
     #Delete animals
-    for i in removedPlayerIDs:
+    for i in xrange(len(removedPlayers)):
+      #Replace playerID with index
+      removedPlayers[i] = self.getIndexFromID(removedPlayers[i], tempPlayers)
+    
+    for i in removedPlayers:
       removeQueue.append(self.animals[i])
     for animal in removeQueue:
       self.animals.remove(animal)
     
     removeQueue = []
-    for i in removedPlayerIDs:
+    for i in removedPlayers:
       removeQueue.append(self.vision.previous_locs[i])
     for loc in removeQueue:
       self.vision.previous_locs.remove(loc)
 
     removeQueue = []
-    for i in removedPlayerIDs:
+    for i in removedPlayers:
       removeQueue.append(self.vision.animal_locs[i])
     for loc in removeQueue:
       self.vision.animal_locs.remove(loc)
-
-    print "REMOVING:"
-    print self.players
-    print self.animals
-    print self.vision.tracking
-    print self.vision.previous_locs
-    print self.vision.animal_locs
 
   def send_status(self, color):
     #VARIABLES TO CHANGE TO DETERMINE CORRECT VALUES
@@ -176,7 +175,6 @@ class Game(object):
         player_id = p
         break
 
-    print player_id
     pX, pY = self.vision.previous_locs[player_id]
     aX, aY = self.vision.animal_locs[player_id][0], self.vision.animal_locs[player_id][1]
     h, w = self.vision.height, self.vision.width
