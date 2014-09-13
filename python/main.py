@@ -30,10 +30,10 @@ class Vision(object):
         for index in xrange(len(self.tracking)):
           color, player = self.tracking[index]
           if color == 0: #RED
-            lower_color = np.array([0,128,128])
+            lower_color = np.array([0,180,180])
             upper_color = np.array([20,255,255])
           elif color == 1: #BLUE
-            lower_color = np.array([110,128,128])
+            lower_color = np.array([110,180,180])
             upper_color = np.array([130,255,255])
           elif color == 2: #BLACK
             lower_color = np.array([0,0,0])
