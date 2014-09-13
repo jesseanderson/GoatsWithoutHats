@@ -4,6 +4,7 @@ import random
 import cv2
 import copy
 from server import server
+import time
 
 """Global Constants go here in CAPS"""
 
@@ -19,6 +20,7 @@ class Vision(object):
     self.animal_locs = []
     self.width = self.cap.get(3)
     self.height = self.cap.get(4)
+    self.last_accel = None
 
   def run(self):
     while(self.cap.isOpened()):
@@ -76,20 +78,42 @@ class Vision(object):
     cv2.destroyAllWindows()
 
   def move_animal(self, index):
+    if(self.last_accel == None):
+      self.last_accel = time.time()
+    r = 10
     (x, y, dx, dy) = self.animal_locs[index]
-    newdx = int(dx + 15 * (random.random() - 0.5))
-    newdy = int(dy + 15 * (random.random() - 0.5))
+    update_dx_dy = (time.time()-self.last_accel)>1
+    offScreen = False
+    if(update_dx_dy):
+      newdx = int(dx + 7.5 * (random.random() - 0.5))
+      newdy = int(dy + 7.5 * (random.random() - 0.5))
+      self.last_accel = time.time()
     """Keep the animal on the screen(ish)"""
     if x < 0:
-      x = x + 2 * abs(dx)
+      x = 0
+      #Recalc speeds
+      dx = int(abs(dx + 5 * (random.random() - 0.5)))
+      offScreen = True
     elif x > self.width:
-      x = x - 2 * abs(dx)
+      x = self.width
+      dx = -1*int(abs(dx + 5 * (random.random() - 0.5)))
+      offScreen = True
     if y < 0: 
-      y = y + 2 * abs(dy)
+      y = 0
+      dy = int(abs(dy + 5 * (random.random() - 0.5)))
+      offScreen = True
     elif y > self.height:
-      y = y - 2 * abs(dy)
-    self.animal_locs[index] = (x + dx, y + dy, newdx, newdy)
-
+      y = self.height
+      dy = int(abs(dy + 5 * (random.random() - 0.5)))
+      offScreen = True
+    if(offScreen == True):
+      self.last_accel = time.time()
+      self.animal_locs[index] = (int(x + dx), int(y + dy), dx, dy)
+    elif(update_dx_dy):
+      self.animal_locs[index] = (int(x + dx), int(y + dy), newdx, newdy)
+    else:
+      self.animal_locs[index] = (int(x + dx), int(y + dy), 
+                                 dx, dy)
   def start_tracking(self, color, player):
     self.tracking.append((color, player))
 
