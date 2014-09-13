@@ -1,5 +1,6 @@
 import sys
 import numpy as np
+import random
 import cv2
 from server import server
 
@@ -14,6 +15,9 @@ class Vision(object):
       self.cap = cv2.VideoCapture(0)
     self.tracking = [(1,0),(0,1)]
     self.previous_locs = [(0,0),(0,0)]
+    self.animal_locs = []
+    self.width = self.cap.get(3)
+    self.height = self.cap.get(4)
 
   def run(self):
     while(self.cap.isOpened()):
@@ -65,9 +69,10 @@ class Game(object):
     super(Game, self).__init__(**kwargs)
     self.players = []
     self.player_count = 0
+    self.animals = []
     self.vision = Vision()
     self.server = server(self.send_status, self.add_player)
-    self.server.main()
+    #self.server.main()
 
   def run(self):
     self.vision.run()
@@ -75,6 +80,12 @@ class Game(object):
   def add_player(self, color):
     self.vision.start_tracking(color, self.player_count)
     self.player_count = self.player_count + 1
+    animal_x = 0
+    animal_y = 0
+    while(animal_x == 0 and animal_y == 0):
+      animal_x = random() * self.vision.width()
+      animal_y = random() * self.vision.height()
+    self.animals.add(animal_x, animal_y)
 
   def remove_player(self, color):
     pass
