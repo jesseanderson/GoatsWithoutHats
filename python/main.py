@@ -69,6 +69,15 @@ class Vision(object):
     (x, y, dx, dy) = self.animal_locs[index]
     newdx = int(dx + 5 * (random.random() - 0.5))
     newdy = int(dy + 5 * (random.random() - 0.5))
+    """Keep the animal on the screen(ish)"""
+    if x < 0:
+      x = x + 2 * abs(dx)
+    elif x > self.width:
+      x = x - 2 * abs(dx)
+    if y < 0: 
+      y = y + 2 * abs(dy)
+    elif y > self.height:
+      y = y - 2 * abs(dy)
     self.animal_locs[index] = (x + dx, y + dy, newdx, newdy)
 
   def start_tracking(self, color, player):
