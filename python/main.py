@@ -53,9 +53,11 @@ class Vision(object):
             cx,cy = int(M['m10']/M['m00']), int(M['m01']/M['m00'])
             self.previous_locs[index] = (cx, cy)
           cv2.circle(frame,(cx,cy),5,255,-1)
-          cv2.circle(frame,self.animal_locs[index],5,255,-1)
+          cv2.circle(frame,(self.animal_locs[index][0],self.animal_locs[index][1]),
+                            5,255,-1)
           self.move_animal(index)
-          cv2.circle(frame,self.animal_locs[player],5,255,-1)
+          cv2.circle(frame,(self.animal_locs[index][0],self.animal_locs[index][1]),
+                     5,255,-1)
       """End Tracking"""
       cv2.imshow('Goats Without Hats!', frame)
       if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -65,8 +67,8 @@ class Vision(object):
 
   def move_animal(self, index):
     (x, y, dx, dy) = self.animal_locs[index]
-    newdx = dx + 5 * (random.random() - 0.5)
-    newdy = dy + 5 * (random.random() - 0.5)
+    newdx = int(dx + 5 * (random.random() - 0.5))
+    newdy = int(dy + 5 * (random.random() - 0.5))
     self.animal_locs[index] = (x + dx, y + dy, newdx, newdy)
 
   def start_tracking(self, color, player):
@@ -98,7 +100,7 @@ class Game(object):
       animal_x = int(random.random() * self.vision.width)
       animal_y = int(random.random() * self.vision.height)
     self.animals.append((animal_x, animal_y, 0, 0))
-    self.vision.animal_locs.append((animal_x, animal_y))
+    self.vision.animal_locs.append((animal_x, animal_y, 0, 0))
 
   def remove_player(self, color):
     #Remove from game player list
@@ -145,7 +147,7 @@ class Game(object):
         break
 
     pX, pY = self.vision.previous_locs[player_id]
-    aX, aY = self.vision.animal_locs[player_id]
+    aX, aY = self.vision.animal_locs[player_id][0], self.vision.animal_locs[player_id][1]
     h, w = self.vision.height, self.vision.width
     radius = radius_ratio * (max(h,w)/2) - win_ring_radius
     ring_size = radius / 9
