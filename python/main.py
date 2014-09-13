@@ -81,6 +81,7 @@ class Game(object):
     
   def add_player(self, color):
     self.vision.start_tracking(color, self.player_count)
+    self.players.append((color, self.player_count))
     self.vision.previous_locs.append((0,0))
     self.player_count = self.player_count + 1
     animal_x = 0
