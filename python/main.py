@@ -29,14 +29,14 @@ class Vision(object):
         for index in xrange(len(self.tracking)):
           color, player = self.tracking[index]
           if color == 0: #RED
-            lower_color = np.array([0,50,50])
+            lower_color = np.array([0,128,128])
             upper_color = np.array([20,255,255])
           elif color == 1: #BLUE
-            lower_color = np.array([110,50,50])
+            lower_color = np.array([110,128,128])
             upper_color = np.array([130,255,255])
-          elif color == 2: #ORANGE
-            lower_color = np.array([30,50,50])
-            upper_color = np.array([50,255,255])
+          elif color == 2: #BLACK
+            lower_color = np.array([0,0,0])
+            upper_color = np.array([179,255,20])
           thresh = cv2.inRange(hsv_frame, lower_color, upper_color)
           contours, _ = cv2.findContours(thresh,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
           max_area = 0
@@ -62,10 +62,10 @@ class Vision(object):
             cv2.circle(frame,(cx,cy),5,255,-1)
             cv2.circle(frame,(self.animal_locs[index][0],self.animal_locs[index][1]),
                        10,255,-1)
-          elif color == 2: #ORANGE
-            cv2.circle(frame,(cx,cy),5,(0,128,255),-1)
+          elif color == 2: #BLACK
+            cv2.circle(frame,(cx,cy),5,0,-1)
             cv2.circle(frame,(self.animal_locs[index][0],self.animal_locs[index][1]),
-                       10,(0,128,255),-1)
+                       10,0,-1)
           
           
       """End Tracking"""
