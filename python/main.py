@@ -53,6 +53,7 @@ class Vision(object):
             self.previous_locs[player] = (cx, cy)
           cv2.circle(frame,(cx,cy),5,255,-1)
           """FUTURE ANIMAL CRAP"""
+          self.move_animal(player)
           cv2.circle(frame,self.animal_locs[player],5,255,-1)
       """End Tracking"""
       cv2.imshow('Goats Without Hats!', frame)
@@ -60,6 +61,12 @@ class Vision(object):
         break
     self.cap.release()
     cv2.destroyAllWindows()
+
+  def move_animal(self, index):
+    (x, y, dx, dy) = self.animal_locs[index]
+    newdx = dx + 5 * (random.random() - 0.5)
+    newdy = dy + 5 * (random.random() - 0.5)
+    self.animal_locs[index] = (x + dx, y + dy, newdx, newdy)
 
   def start_tracking(self, color, player):
     self.tracking.append((color, player))
@@ -89,7 +96,7 @@ class Game(object):
     while(animal_x == 0 and animal_y == 0):
       animal_x = int(random.random() * self.vision.width)
       animal_y = int(random.random() * self.vision.height)
-    self.animals.append((animal_x, animal_y))
+    self.animals.append((animal_x, animal_y, 0, 0))
     self.vision.animal_locs.append((animal_x, animal_y))
 
   def remove_player(self, color):
