@@ -30,10 +30,10 @@ class Vision(object):
         for index in xrange(len(self.tracking)):
           color, player = self.tracking[index]
           if color == 0: #RED
-            lower_color = np.array([0,128,128])
+            lower_color = np.array([0,60,60])
             upper_color = np.array([20,255,255])
           elif color == 1: #BLUE
-            lower_color = np.array([110,128,128])
+            lower_color = np.array([110,60,60])
             upper_color = np.array([130,255,255])
           elif color == 2: #BLACK
             lower_color = np.array([0,0,0])
@@ -59,6 +59,10 @@ class Vision(object):
             cv2.circle(frame,(cx,cy),5,(0,0,255),-1)
             cv2.circle(frame,(self.animal_locs[index][0],self.animal_locs[index][1]),
                        10,(0,0,255),-1)
+          elif color == 1: #BLUE
+            cv2.circle(frame,(cx,cy),5,255,-1)
+            cv2.circle(frame,(self.animal_locs[index][0],self.animal_locs[index][1]),
+                       10,255,-1)
           elif color == 2: #BLACK
             cv2.circle(frame,(cx,cy),5,0,-1)
             cv2.circle(frame,(self.animal_locs[index][0],self.animal_locs[index][1]),
