@@ -75,13 +75,13 @@ class Game(object):
     self.vision = Vision()
     self.server = server(self.send_status, self.add_player, self.remove_player)
     self.server.main()
-    self.add_player(1)
 
   def run(self):
     self.vision.run()
     
   def add_player(self, color):
     self.vision.start_tracking(color, self.player_count)
+    self.players.append((color, self.player_count))
     self.vision.previous_locs.append((0,0))
     self.player_count = self.player_count + 1
     animal_x = 0
@@ -123,7 +123,11 @@ class Game(object):
 
     sound_level = dist / ring_size
 
-    return 9 - sound_level
+    #Bound is 0; must adjust circle size to decrease
+    #amount of numbers in this range
+    if(9 - sound_level < 0):
+      return 0
+    return int(9 - sound_level)
 
 if __name__ == '__main__':
   Game().run()
