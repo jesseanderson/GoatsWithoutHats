@@ -52,12 +52,22 @@ class Vision(object):
             M = cv2.moments(best_cnt)
             cx,cy = int(M['m10']/M['m00']), int(M['m01']/M['m00'])
             self.previous_locs[index] = (cx, cy)
-          cv2.circle(frame,(cx,cy),5,255,-1)
-          cv2.circle(frame,(self.animal_locs[index][0],self.animal_locs[index][1]),
-                            5,255,-1)
           self.move_animal(index)
-          cv2.circle(frame,(self.animal_locs[index][0],self.animal_locs[index][1]),
-                     5,255,-1)
+          """Drawing Circles"""
+          if color == 0: #RED
+            cv2.circle(frame,(cx,cy),5,CV2.scalar(0,0,255),-1)
+            cv2.circle(frame,(self.animal_locs[index][0],self.animal_locs[index][1]),
+                       10,CV2.scalar(0,0,255),-1)
+          elif color == 1: #BLUE
+            cv2.circle(frame,(cx,cy),5,255,-1)
+            cv2.circle(frame,(self.animal_locs[index][0],self.animal_locs[index][1]),
+                       10,255,-1)
+          elif color == 2: #ORANGE
+            cv2.circle(frame,(cx,cy),5,CV2.scalar(0,128,255),-1)
+            cv2.circle(frame,(self.animal_locs[index][0],self.animal_locs[index][1]),
+                       10,CV2.scalar(0,128,255),-1)
+          
+          
       """End Tracking"""
       cv2.imshow('Goats Without Hats!', frame)
       if cv2.waitKey(1) & 0xFF == ord('q'):
