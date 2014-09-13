@@ -82,7 +82,6 @@ class Vision(object):
 
   def start_tracking(self, color, player):
     self.tracking.append((color, player))
-    self.previous_locs.append((0,0))
 
 class Game(object):
 
