@@ -2,7 +2,7 @@ import socket
 import threading
 
 class server(object):
-  def __init__(self, getSound, newPlayer, **kwargs):
+  def __init__(self, getSound, newPlayer, removeColor, **kwargs):
     super(server,self);
     self.s = socket.socket(socket.AF_INET,
                            socket.SOCK_STREAM)
@@ -15,6 +15,7 @@ class server(object):
     self.clients = []
 
     #OpenCV interface
+    self.removeColor = removeColor
     self.getSound = getSound
     self.newPlayer = newPlayer
 
@@ -25,6 +26,15 @@ class server(object):
     cThread.setDaemon(True)
     cThread.start()
 
+    sThread = threading.Thread(target = self.serverLoop)
+    sThread.setDaemon(True)
+    sThread.start()
+
+    #Temporary for testing
+    while(True):
+      pass
+
+  def serverLoop(self):
     while(True):
       #Implement delay for loop; we don't update every time
 
@@ -35,7 +45,6 @@ class server(object):
       #Transfer the locations to clients
       self.sendData(transferData)
 
-  #May want another thread for this to deal with accept
   def getClients(self):
     #Loop until we find no more sockets
     while(True):
@@ -65,5 +74,16 @@ class server(object):
     for client in transferData:
       clientSock = client[0]
       data = client[2]
+      #Handle
+      try:
+        clientSock.send(data)
+      except:
+        self.removeClient(client[0])
 
-      clientSock.send(data)
+  def removeClient(self, client):
+    for sock in self.clients:
+      if(sock[0] == client):
+        self.clients.remove(sock)
+        self.removeColor(sock[2])
+        sock[0].close()
+        return
