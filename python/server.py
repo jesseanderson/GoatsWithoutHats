@@ -31,8 +31,8 @@ class server(object):
     sThread.start()
 
     #Temporary for testing
-    while(True):
-      pass
+    #while(True):
+    #  pass
 
   def serverLoop(self):
     while(True):
