@@ -1,4 +1,5 @@
 import socket
+import threading
 
 class server(object):
   def __init__(self, getSound, newPlayer, **kwargs):
@@ -19,14 +20,11 @@ class server(object):
 
   def main(self):
     self.s.listen(5)
-    #############START IN NEW THREAD###############
-    self.getClients()
-    ###############################################
+    
+    #Listen in new thread to not block other operations
+    cThread = threading.Thread(target = self.getClients)
+    cThread.start()
     while(True):
-      #Be aware of either timeout or threading needs
-      #Connect clients and put them in list
-      
-
       #Use client list to get position data from OpenCV
       #TransferData: list of socket, data to send to it
       transferData = self.getData()
@@ -40,6 +38,8 @@ class server(object):
     while(True):
         client, addr = self.s.accept()
         data = client.recv(1024)
+        #Inform OpenCV of the new player
+        self.newPlayer(data)
         self.clients.append((client, addr, data))
 
   def getData(self):
@@ -54,9 +54,8 @@ class server(object):
     return (data)
 
   def sendData(self, transferData):
-    
     #Go through our clients and send them their data
     for client in transferData:
       clientSock = client[0]
-      data = client[1]
+      data = client[2]
       clientSock.send(data)
