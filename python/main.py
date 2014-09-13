@@ -30,10 +30,10 @@ class Vision(object):
         for index in xrange(len(self.tracking)):
           color, player = self.tracking[index]
           if color == 0: #RED
-            lower_color = np.array([0,60,60])
+            lower_color = np.array([0,128,60])
             upper_color = np.array([20,255,255])
           elif color == 1: #BLUE
-            lower_color = np.array([110,60,60])
+            lower_color = np.array([110,128,60])
             upper_color = np.array([130,255,255])
           elif color == 2: #BLACK
             lower_color = np.array([0,0,0])
@@ -77,8 +77,8 @@ class Vision(object):
 
   def move_animal(self, index):
     (x, y, dx, dy) = self.animal_locs[index]
-    newdx = int(dx + 5 * (random.random() - 0.5))
-    newdy = int(dy + 5 * (random.random() - 0.5))
+    newdx = int(dx + 15 * (random.random() - 0.5))
+    newdy = int(dy + 15 * (random.random() - 0.5))
     """Keep the animal on the screen(ish)"""
     if x < 0:
       x = x + 2 * abs(dx)
@@ -167,7 +167,7 @@ class Game(object):
   def send_status(self, color):
     #VARIABLES TO CHANGE TO DETERMINE CORRECT VALUES
     radius_ratio = .7
-    win_ring_radius = 10
+    win_ring_radius = 30
     WIN_SOUND = 9
     ################################################
     #Find the player
