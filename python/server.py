@@ -34,9 +34,23 @@ class server(object):
   def getData(self):
     #Interface with OpenCV to compute list of client
     #information
-    pass
+    num = len(self.clients)
+    data = []
+    for i in num:
+        color = self.clients[i][2]
+        distance = self.getSound(color)
+        information = (self.clients[i][0], self.clients[i][1], distance)
+        data.append(information)
+    return (data)
 
   def sendData(self, transferData):
+    
     #Go through our clients and send them their data
     pass
+
+
+
+
+
+
 
