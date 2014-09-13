@@ -55,17 +55,17 @@ class Vision(object):
           self.move_animal(index)
           """Drawing Circles"""
           if color == 0: #RED
-            cv2.circle(frame,(cx,cy),5,CV2.scalar(0,0,255),-1)
+            cv2.circle(frame,(cx,cy),5,(0,0,255),-1)
             cv2.circle(frame,(self.animal_locs[index][0],self.animal_locs[index][1]),
-                       10,CV2.scalar(0,0,255),-1)
+                       10,(0,0,255),-1)
           elif color == 1: #BLUE
             cv2.circle(frame,(cx,cy),5,255,-1)
             cv2.circle(frame,(self.animal_locs[index][0],self.animal_locs[index][1]),
                        10,255,-1)
           elif color == 2: #ORANGE
-            cv2.circle(frame,(cx,cy),5,CV2.scalar(0,128,255),-1)
+            cv2.circle(frame,(cx,cy),5,(0,128,255),-1)
             cv2.circle(frame,(self.animal_locs[index][0],self.animal_locs[index][1]),
-                       10,CV2.scalar(0,128,255),-1)
+                       10,(0,128,255),-1)
           
           
       """End Tracking"""
@@ -103,10 +103,12 @@ class Game(object):
     self.vision = Vision()
     self.server = server(self.send_status, self.add_player, self.remove_player)
     self.server.main()
+    
 
   def run(self):
     self.vision.run()
     
+
   def add_player(self, color):
     self.vision.start_tracking(color, self.player_count)
     self.players.append((color, self.player_count))
