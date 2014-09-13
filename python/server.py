@@ -1,5 +1,7 @@
+import socket
+
 class server(object):
-  def __init__(self, **kwargs, getSound, newPlayer):
+  def __init__(self, getSound, newPlayer, **kwargs):
     super(self,server);
     self.s = socket.socket(socket.AF_INET,
                                 socket.SOCK_STREAM)
