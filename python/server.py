@@ -1,5 +1,7 @@
 import socket
 import threading
+import struct
+import time
 
 class server(object):
   def __init__(self, getSound, newPlayer, removeColor, **kwargs):
@@ -48,16 +50,19 @@ class server(object):
 
       #Transfer the locations to clients
       self.sendData(transferData)
+      time.sleep(.5)
 
   def getClients(self):
     #Loop until we find no more sockets
     while(True):
         client, addr = self.s.accept()
         data = client.recv(1)
-
+        data = struct.unpack('B', data[0])[0]
         #Inform OpenCV of the new player
+        
         self.newPlayer(data)
         self.clients.append((client, addr, data))
+        time.sleep(.5)
 
   def getData(self):
     #Interface with OpenCV to compute list of client
@@ -78,9 +83,9 @@ class server(object):
     for client in transferData:
       clientSock = client[0]
       data = client[2]
-      #Handle
+      #Handle disconnecting
       try:
-        clientSock.send(data)
+        clientSock.send(struct.pack('B', data))
       except:
         self.removeClient(client[0])
 
