@@ -1,6 +1,7 @@
 import sys
 import numpy as np
 import cv2
+from server import server
 
 """Global Constants go here in CAPS"""
 
@@ -65,6 +66,8 @@ class Game(object):
     self.players = []
     self.player_count = 0
     self.vision = Vision()
+    self.server = server(self.send_status, self.add_player)
+    self.server.main()
 
   def run(self):
     self.vision.run()
@@ -72,6 +75,9 @@ class Game(object):
   def add_player(self, color):
     self.vision.start_tracking(color, self.player_count)
     self.player_count = self.player_count + 1
+
+  def remove_player(self, color):
+    pass
 
   def send_status(self, color):
     pass
