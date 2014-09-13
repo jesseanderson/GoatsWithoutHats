@@ -1,18 +1,26 @@
 import sys
+import numpy as np
+import cv2
 
 """Global Constants go here in CAPS"""
 
-class main(object):
+class Vision(object):
 
   def __init__(self, **kwargs):
-    """Do we need this?  I don't know."""
-    super(main, self).__init(**kwargs)
-
-  def opencv_file(self):
-    pass
-
-  def opencv_webcam(self):
-    pass
+    super(Vision, self).__init__(**kwargs)
+    if(len(sys.argv) > 1): #Video File input
+      self.cap = cv2.VideoCapture(str(sys.argv[1]))
+    else: #Webcam input
+      self.cap = cv2.VideoCapture(0)
 
   def run(self):
-    pass
+    while(self.cap.isOpened()):
+      ret, frame = self.cap.read()
+      cv2.imshow('Goats Without Hats!', frame)
+      if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+    self.cap.release()
+    cv2.destroyAllWindows()
+
+if __name__ == '__main__':
+  Vision().run()
