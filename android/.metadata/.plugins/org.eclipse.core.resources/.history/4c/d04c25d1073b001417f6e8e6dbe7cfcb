@@ -1,0 +1,53 @@
+package com.hackcmu.goatswithouthats;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.net.SocketAddress;
+import java.net.UnknownHostException;
+
+import android.util.Log;
+
+public class Connection extends Thread {
+	
+	public Socket s;
+	String hostname;
+	int port;
+	InputStream input;
+	OutputStream output;
+
+	public Connection(String hostname, int port)
+	{
+		this.hostname = hostname;
+		this.port = port;
+	}
+	
+	public void run()
+	{
+		try
+		{
+			s = new Socket(hostname, port);
+			input = s.getInputStream();
+			output = s.getOutputStream();
+		}
+		catch (UnknownHostException e)
+		{
+			e.printStackTrace();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		while(true)
+		{
+			
+		}
+	}
+	
+	public void pushByte(byte b)
+	{
+		output.write((int)b);
+	}
+	
+}
