@@ -43,12 +43,11 @@ class server(object):
   def getData(self):
     #Interface with OpenCV to compute list of client
     #information
-    num = len(self.clients)
     data = []
-    for i in num:
-        color = self.clients[i][2]
+    for client in self.clients:
+        color = client[2]
         distance = self.getSound(color)
-        information = (self.clients[i][0], self.clients[i][1], distance)
+        information = (client[0], client[1], distance)
         data.append(information)
     return (data)
 
