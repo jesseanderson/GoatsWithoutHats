@@ -19,6 +19,8 @@ class Vision(object):
       cv2.imshow('Goats Without Hats!', frame)
       if cv2.waitKey(1) & 0xFF == ord('q'):
         break
+    self.cap.release()
+    cv2.destroyAllWindows()
 
 if __name__ == '__main__':
   Vision().run()
