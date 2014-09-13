@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Goats Without Hats</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_new_game">NewGameActivity</string>
+    <string name="hostname_edit_label">Enter your server\'s hostname below:</string>
+    <string name="shirt_color_label">Pick your shirt color below:</string>
+    <string name="connect_error">Connection failed</string>
+    <string name="title_activity_game">GameActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="find1">Find the Invisible Cow</string>
+
+</resources>

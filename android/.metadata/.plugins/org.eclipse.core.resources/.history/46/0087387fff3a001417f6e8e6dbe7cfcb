@@ -1,0 +1,5 @@
+package com.hackcmu.goatswithouthats;
+
+public class Connection extends Thread {
+
+}

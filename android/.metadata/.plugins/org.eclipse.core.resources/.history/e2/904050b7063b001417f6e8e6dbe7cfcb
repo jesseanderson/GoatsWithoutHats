@@ -1,0 +1,39 @@
+package com.hackcmu.goatswithouthats;
+
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
+import android.util.Log;
+
+public class Connection extends Thread {
+	
+	public Socket s;
+	String hostname;
+	int port;
+
+	public Connection(String hostname, int port)
+	{
+		this.hostname = hostname;
+		this.port = port;
+	}
+	
+	public void run()
+	{
+		try
+		{
+			s = new Socket(hostname, port);
+		}
+		catch (UnknownHostException e)
+		{
+		}
+		catch (IOException e)
+		{
+		}
+		while(true)
+		{
+			Log.d("Eat a", "dick");
+		}
+	}
+	
+}

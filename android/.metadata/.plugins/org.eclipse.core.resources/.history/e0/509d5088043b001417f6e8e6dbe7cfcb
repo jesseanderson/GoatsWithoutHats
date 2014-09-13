@@ -1,0 +1,30 @@
+package com.hackcmu.goatswithouthats;
+
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
+public class Connection extends Thread {
+	
+	public Socket s;
+
+	public Connection(String hostname, int port)
+	{
+		try
+		{
+			s = new Socket(hostname, port);
+		}
+		catch (UnknownHostException e)
+		{
+		}
+		catch (IOException e)
+		{
+		}
+	}
+	
+	public void run()
+	{
+		
+	}
+	
+}

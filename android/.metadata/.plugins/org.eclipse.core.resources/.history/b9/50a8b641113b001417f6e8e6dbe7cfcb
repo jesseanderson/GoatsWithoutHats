@@ -1,0 +1,9 @@
+package com.hackcmu.goatswithouthats;
+
+public interface Connectable {
+
+	void connectFail();
+	
+	void connectSuccess();
+	
+}

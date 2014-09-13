@@ -1,0 +1,53 @@
+package com.hackcmu.goatswithouthats;
+
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.app.Activity;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.TextView;
+import android.support.v4.app.NavUtils;
+import android.annotation.TargetApi;
+import android.os.Build;
+
+public class GameActivity extends Activity implements Connectable{
+
+	public Connection c;
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_game);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.game, menu);
+		return true;
+	}
+	
+	private final Handler handler = new Handler()
+    {
+    	public void handleMessage(Message msg)
+    	{
+    		switch(msg.arg1)
+    		{
+    		case 1:
+    			connectFail();
+    			break;
+    		}
+    	}
+    };
+    
+    public Handler getHandler(){return handler;}
+    
+    public void connectFail()
+    {
+    	TextView tv = (TextView) findViewById(R.id.connecterror);
+    	tv.setText(getString(R.string.connect_error));
+    	c = null;
+    }
+
+}
