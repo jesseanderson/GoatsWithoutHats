@@ -35,15 +35,12 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int activity_vertical_margin=0x7f070001;
     }
     public static final class drawable {
-        public static final int color1=0x7f020000;
-        public static final int color2=0x7f020001;
-        public static final int color3=0x7f020002;
-        public static final int connectbuttonselector=0x7f020003;
-        public static final int ic_launcher=0x7f020004;
-        public static final int playbutton=0x7f020005;
-        public static final int playbuttonpressed=0x7f020006;
-        public static final int playbuttonselector=0x7f020007;
-        public static final int titlelogo=0x7f020008;
+        public static final int connectbuttonselector=0x7f020000;
+        public static final int ic_launcher=0x7f020001;
+        public static final int playbutton=0x7f020002;
+        public static final int playbuttonpressed=0x7f020003;
+        public static final int playbuttonselector=0x7f020004;
+        public static final int titlelogo=0x7f020005;
     }
     public static final class id {
         public static final int colorspinner=0x7f0c0005;
@@ -77,17 +74,49 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int cow_vol7=0x7f040006;
         public static final int cow_vol8=0x7f040007;
         public static final int cow_vol9=0x7f040008;
+        public static final int doge_vol1=0x7f040009;
+        public static final int doge_vol2=0x7f04000a;
+        public static final int doge_vol3=0x7f04000b;
+        public static final int doge_vol4=0x7f04000c;
+        public static final int doge_vol5=0x7f04000d;
+        public static final int doge_vol6=0x7f04000e;
+        public static final int doge_vol7=0x7f04000f;
+        public static final int doge_vol8=0x7f040010;
+        public static final int doge_vol9=0x7f040011;
+        public static final int goat_vol1=0x7f040012;
+        public static final int goat_vol2=0x7f040013;
+        public static final int goat_vol3=0x7f040014;
+        public static final int goat_vol4=0x7f040015;
+        public static final int goat_vol5=0x7f040016;
+        public static final int goat_vol6=0x7f040017;
+        public static final int goat_vol7=0x7f040018;
+        public static final int goat_vol8=0x7f040019;
+        public static final int goat_vol9=0x7f04001a;
+        public static final int velociraptor_vol1=0x7f04001b;
+        public static final int velociraptor_vol2=0x7f04001c;
+        public static final int velociraptor_vol3=0x7f04001d;
+        public static final int velociraptor_vol4=0x7f04001e;
+        public static final int velociraptor_vol5=0x7f04001f;
+        public static final int velociraptor_vol6=0x7f040020;
+        public static final int velociraptor_vol7=0x7f040021;
+        public static final int velociraptor_vol8=0x7f040022;
+        public static final int velociraptor_vol9=0x7f040023;
+        public static final int yay=0x7f040024;
     }
     public static final class string {
         public static final int action_settings=0x7f090001;
         public static final int app_name=0x7f090000;
         public static final int connect_error=0x7f090005;
         public static final int find0=0x7f090008;
+        public static final int find1=0x7f090009;
+        public static final int find2=0x7f09000a;
+        public static final int find3=0x7f09000b;
         public static final int hello_world=0x7f090007;
         public static final int hostname_edit_label=0x7f090003;
         public static final int shirt_color_label=0x7f090004;
         public static final int title_activity_game=0x7f090006;
         public static final int title_activity_new_game=0x7f090002;
+        public static final int win=0x7f09000c;
     }
     public static final class style {
         /** 
