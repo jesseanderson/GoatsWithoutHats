@@ -26,7 +26,8 @@ class Vision(object):
       """Start Tracking"""
       if self.tracking:
         hsv_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-        for color, player in self.tracking:
+        for index in xrange(len(self.tracking)):
+          color, player = self.tracking[index]
           if color == 0: #RED
             lower_color = np.array([0,50,50])
             upper_color = np.array([20,255,255])
@@ -46,14 +47,27 @@ class Vision(object):
               max_area = area
               best_cnt = cnt
           if best_cnt is 1:
-            cx, cy = self.previous_locs[player]
+            cx, cy = self.previous_locs[index]
           else:
             M = cv2.moments(best_cnt)
             cx,cy = int(M['m10']/M['m00']), int(M['m01']/M['m00'])
-            self.previous_locs[player] = (cx, cy)
-          cv2.circle(frame,(cx,cy),5,255,-1)
-          """FUTURE ANIMAL CRAP"""
-          cv2.circle(frame,self.animal_locs[player],5,255,-1)
+            self.previous_locs[index] = (cx, cy)
+          self.move_animal(index)
+          """Drawing Circles"""
+          if color == 0: #RED
+            cv2.circle(frame,(cx,cy),5,(0,0,255),-1)
+            cv2.circle(frame,(self.animal_locs[index][0],self.animal_locs[index][1]),
+                       10,(0,0,255),-1)
+          elif color == 1: #BLUE
+            cv2.circle(frame,(cx,cy),5,255,-1)
+            cv2.circle(frame,(self.animal_locs[index][0],self.animal_locs[index][1]),
+                       10,255,-1)
+          elif color == 2: #ORANGE
+            cv2.circle(frame,(cx,cy),5,(0,128,255),-1)
+            cv2.circle(frame,(self.animal_locs[index][0],self.animal_locs[index][1]),
+                       10,(0,128,255),-1)
+          
+          
       """End Tracking"""
       cv2.imshow('Goats Without Hats!', frame)
       if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -61,9 +75,23 @@ class Vision(object):
     self.cap.release()
     cv2.destroyAllWindows()
 
+  def move_animal(self, index):
+    (x, y, dx, dy) = self.animal_locs[index]
+    newdx = int(dx + 5 * (random.random() - 0.5))
+    newdy = int(dy + 5 * (random.random() - 0.5))
+    """Keep the animal on the screen(ish)"""
+    if x < 0:
+      x = x + 2 * abs(dx)
+    elif x > self.width:
+      x = x - 2 * abs(dx)
+    if y < 0: 
+      y = y + 2 * abs(dy)
+    elif y > self.height:
+      y = y - 2 * abs(dy)
+    self.animal_locs[index] = (x + dx, y + dy, newdx, newdy)
+
   def start_tracking(self, color, player):
     self.tracking.append((color, player))
-    self.previous_locs.append((0,0))
 
 class Game(object):
 
@@ -75,10 +103,12 @@ class Game(object):
     self.vision = Vision()
     self.server = server(self.send_status, self.add_player, self.remove_player)
     self.server.main()
+    
 
   def run(self):
     self.vision.run()
     
+
   def add_player(self, color):
     self.vision.start_tracking(color, self.player_count)
     self.players.append((color, self.player_count))
@@ -89,11 +119,40 @@ class Game(object):
     while(animal_x == 0 and animal_y == 0):
       animal_x = int(random.random() * self.vision.width)
       animal_y = int(random.random() * self.vision.height)
-    self.animals.append((animal_x, animal_y))
-    self.vision.animal_locs.append((animal_x, animal_y))
+    self.animals.append((animal_x, animal_y, 0, 0))
+    self.vision.animal_locs.append((animal_x, animal_y, 0, 0))
 
   def remove_player(self, color):
-    pass
+    #Remove from game player list
+    removedPlayerIDs = []
+    #List of values that we will remove after finding
+    removeQueue = []
+    for player in self.players:
+      c = player[0]
+      if(c == color):
+        removedPlayerIDs.append(player[1])
+        self.players.remove(player)
+        self.vision.tracking.remove(player)
+
+    #Go through player ID's and add to removeQueue
+    #Delete animals
+    for i in removedPlayerIDs:
+      removeQueue.append(self.animals[i])
+    for animal in removeQueue:
+      self.animals.remove(animal)
+    
+    removeQueue = []
+    for i in removedPlayerIDs:
+      removeQueue.append(self.vision.previous_locs[i])
+    for loc in removeQueue:
+      self.vision.previous_locs.remove(loc)
+
+    removeQueue = []
+    for i in removedPlayerIDs:
+      removeQueue.append(self.vision.animal_locs[i])
+    for loc in removeQueue:
+      self.vision.animal_locs.remove(loc)
+
 
   def send_status(self, color):
     #VARIABLES TO CHANGE TO DETERMINE CORRECT VALUES
@@ -108,7 +167,7 @@ class Game(object):
         break
 
     pX, pY = self.vision.previous_locs[player_id]
-    aX, aY = self.vision.animal_locs[player_id]
+    aX, aY = self.vision.animal_locs[player_id][0], self.vision.animal_locs[player_id][1]
     h, w = self.vision.height, self.vision.width
     radius = radius_ratio * (max(h,w)/2) - win_ring_radius
     ring_size = radius / 9
