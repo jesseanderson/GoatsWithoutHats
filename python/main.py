@@ -8,7 +8,10 @@ class Vision(object):
 
   def __init__(self, **kwargs):
     super(Vision, self).__init__(**kwargs)
-    self.cap = cv2.VideoCapture('../../cut1.mp4')
+    if(len(sys.argv) > 1): #Video File input
+      self.cap = cv2.VideoCapture(str(sys.argv[1]))
+    else: #Webcam input
+      self.cap = cv2.VideoCapture(0)
 
   def run(self):
     while(self.cap.isOpened()):
