@@ -16,7 +16,7 @@ class Vision(object):
   def run(self):
     while(self.cap.isOpened()):
       ret, frame = self.cap.read()
-      cv2.imshow('Goats Without Hats!', frame)
+
       """Start Tracking"""
       if self.tracking:
         hsv_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
@@ -30,10 +30,19 @@ class Vision(object):
           elif color == 2: #ORANGE
             lower_color = np.array([30,50,50])
             upper_color = np.array([50,255,255])
-          mask = cv2.inRange(hsv_frame, lower_color, upper_color)
-          res = cv2.bitwise_and(frame, frame, mask= mask)
-          
+          thresh = cv2.inRange(hsv_frame, lower_color, upper_color)
+          _, contours, _ = cv2.findContours(thresh,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
+          max_area = 0
+          for cnt in contours:
+            area = cv2.contourArea(cnt)
+            if area > max_area:
+              max_area = area
+              best_cnt = cnt
+          M = cv2.moments(best_cnt)
+          cx,cy = int(M['m10']/M['m00']), int(M['m01']/M['m00'])
+          cv2.circle(frame,(cx,cy),5,255,-1)
       """End Tracking"""
+      cv2.imshow('Goats Without Hats!', frame)
       if cv2.waitKey(1) & 0xFF == ord('q'):
         break
     self.cap.release()
