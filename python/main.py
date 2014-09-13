@@ -37,7 +37,7 @@ class Vision(object):
             lower_color = np.array([30,50,50])
             upper_color = np.array([50,255,255])
           thresh = cv2.inRange(hsv_frame, lower_color, upper_color)
-          _, contours, _ = cv2.findContours(thresh,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
+          contours, _ = cv2.findContours(thresh,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
           max_area = 0
           best_cnt = 1
           for cnt in contours:
