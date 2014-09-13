@@ -6,7 +6,7 @@ class main(object):
 
   def __init__(self, **kwargs):
     """Do we need this?  I don't know."""
-    super(main, self).__init(**kwargs)
+    super(main, self).__init__(**kwargs)
 
   def opencv_file(self):
     pass
