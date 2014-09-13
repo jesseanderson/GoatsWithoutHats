@@ -21,6 +21,10 @@ class server(object):
 
   def main(self):
     self.s.listen(5)
+
+    #Test cases for manually adding player to the game
+    #self.clients.append((0,0,1))
+    #self.newPlayer(1)
     #Listen in new thread to not block other operations
     cThread = threading.Thread(target = self.getClients)
     cThread.setDaemon(True)
