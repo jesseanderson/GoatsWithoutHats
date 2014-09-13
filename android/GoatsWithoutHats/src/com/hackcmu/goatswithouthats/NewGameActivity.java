@@ -7,9 +7,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -22,6 +24,7 @@ public class NewGameActivity extends Activity implements Connectable{
 	public String hostname = "";
 	public Connection c = null;
 	int[] distances;
+	int animal = 0;
 	MediaPlayer[] sounds;
 	
 	@Override
@@ -45,6 +48,47 @@ public class NewGameActivity extends Activity implements Connectable{
 		getMenuInflater().inflate(R.menu.new_game, menu);
 		return true;
     }
+	
+	@Override
+	public void onPause()
+	{
+		if (sounds != null)
+		{
+			for(MediaPlayer mp : sounds)
+			{
+				if(soundIsPlaying(mp))
+				{
+					mp.stop();
+				}
+			}
+		}
+		handler = new Handler();
+		super.onPause();
+		onDestroy();
+	}
+	
+	@Override
+	public void onDestroy()
+	{
+		if(c!= null && c.s != null)
+		{
+			try
+			{
+				c.s.close();
+			}
+			catch (IOException e){}
+		}
+		if (sounds != null)
+		{
+			for(MediaPlayer mp : sounds)
+			{
+				mp.release();
+			}
+		}
+		handler = new Handler();
+		finish();
+		super.onDestroy();
+	}
 
     public void onNothingSelected(AdapterView<?> parent)
     {
@@ -55,11 +99,15 @@ public class NewGameActivity extends Activity implements Connectable{
     {
     	EditText e = (EditText) findViewById(R.id.hostnameedittext);
     	hostname = e.getText().toString();
-    	c = new Connection(hostname, 50000, this);
+    	int port = 50000;
+    	String[] d = hostname.split(":");
+    	hostname = d[0];
+    	if(d.length > 1) port = Integer.parseInt(d[1]);
+    	c = new Connection(hostname, port, this);
     	c.start();
     }
     
-    private final Handler handler = new Handler()
+    private Handler handler = new Handler()
     {
     	public void handleMessage(Message msg)
     	{
@@ -106,11 +154,24 @@ public class NewGameActivity extends Activity implements Connectable{
     	TextView tv = (TextView) findViewById(R.id.findtext);
     	distances = new int[getResources().getInteger(R.integer.num_animals)];
     	sounds = new MediaPlayer[getResources().getInteger(R.integer.num_animals)];
-    	int animal = (int)(Math.random()*getResources().getInteger(R.integer.num_animals));
+    	for(int i=0; i<distances.length; i++)
+    	{
+    		distances[i] = -1;
+    	}
+    	animal = (int)(Math.random()*getResources().getInteger(R.integer.num_animals));
     	switch(animal)
     	{
     	case 0:
     		tv.setText(R.string.find0);
+    		break;
+    	case 1:
+    		tv.setText(R.string.find1);
+    		break;
+    	case 2:
+    		tv.setText(R.string.find2);
+    		break;
+    	case 3:
+    		tv.setText(R.string.find3);
     		break;
     	}
     	for(int i=0; i<sounds.length; i++)
@@ -126,9 +187,25 @@ public class NewGameActivity extends Activity implements Connectable{
     	processDistances();
     	for(int i=0; i<sounds.length; i++)
     	{
-    		if(sounds[i] != null && !soundIsPlaying(sounds[i]))
+    		if(distances[i] >= 9)
     		{
-    			Log.d("FUCK A GOAT", "DICK");
+    			if(i == animal)
+    			{
+    				sounds[animal] = MediaPlayer.create(this, R.raw.yay);
+    				sounds[animal].start();
+    				TextView tv = (TextView) findViewById(R.id.findtext);
+    				tv.setText(getString(R.string.win));
+    				try
+    				{
+    					c.s.close();
+    				}
+    				catch(IOException e){}
+    			}
+    			return;
+    		}
+    		if(distances[i] < 0){}
+    		else if(sounds[i] != null && !soundIsPlaying(sounds[i]))
+    		{
     			sounds[i].release();
     			int resid = getSoundId(i, distances[i]);
     			sounds[i] = MediaPlayer.create(this, resid);
@@ -136,7 +213,6 @@ public class NewGameActivity extends Activity implements Connectable{
     		}
     		else if(sounds[i] == null)
     		{
-    			Log.d("DICKS", "AND DICKS");
     			int resid = getSoundId(i, distances[i]);
     			sounds[i] = MediaPlayer.create(this, resid);
     			sounds[i].start();
@@ -149,10 +225,9 @@ public class NewGameActivity extends Activity implements Connectable{
     {
     	for(Byte b : c.output)
     	{
-    		Log.d("PENIS", ""+b);
     		if(b/10 <= distances.length)
     		{
-    			distances[b/10]=b%10;
+    			distances[animal]=b%10;
     		}
     	}
     	c.output.clear();
@@ -160,7 +235,6 @@ public class NewGameActivity extends Activity implements Connectable{
     
     public int getSoundId(int animal, int distance)
     {
-    	Log.d("BALLS", animal+" , "+distance);
     	switch(animal)
     	{
     	case 0:
@@ -177,12 +251,55 @@ public class NewGameActivity extends Activity implements Connectable{
     		case 8: return R.raw.cow_vol9;
     		}
     		break;
+    	case 1:
+    		switch(distance)
+    		{
+    		case 0: return R.raw.goat_vol1;
+    		case 1: return R.raw.goat_vol2;
+    		case 2: return R.raw.goat_vol3;
+    		case 3: return R.raw.goat_vol4;
+    		case 4: return R.raw.goat_vol5;
+    		case 5: return R.raw.goat_vol6;
+    		case 6: return R.raw.goat_vol7;
+    		case 7: return R.raw.goat_vol8;
+    		case 8: return R.raw.goat_vol9;
+    		}
+    		break;
+    	case 2:
+    		switch(distance)
+    		{
+    		case 0: return R.raw.doge_vol1;
+    		case 1: return R.raw.doge_vol2;
+    		case 2: return R.raw.doge_vol3;
+    		case 3: return R.raw.doge_vol4;
+    		case 4: return R.raw.doge_vol5;
+    		case 5: return R.raw.doge_vol6;
+    		case 6: return R.raw.doge_vol7;
+    		case 7: return R.raw.doge_vol8;
+    		case 8: return R.raw.doge_vol9;
+    		}
+    		break;
+    	case 3:
+    		switch(distance)
+    		{
+    		case 0: return R.raw.velociraptor_vol1;
+    		case 1: return R.raw.velociraptor_vol2;
+    		case 2: return R.raw.velociraptor_vol3;
+    		case 3: return R.raw.velociraptor_vol4;
+    		case 4: return R.raw.velociraptor_vol5;
+    		case 5: return R.raw.velociraptor_vol6;
+    		case 6: return R.raw.velociraptor_vol7;
+    		case 7: return R.raw.velociraptor_vol8;
+    		case 8: return R.raw.velociraptor_vol9;
+    		}
+    		break;
     	}
     	return 0;
     }
     
     public boolean soundIsPlaying(MediaPlayer mp)
     {
+    	if(mp == null) return false;
     	try
     	{
     		return mp.isPlaying();

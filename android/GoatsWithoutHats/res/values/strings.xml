@@ -10,5 +10,9 @@
     <string name="title_activity_game">GameActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="find0">Find the Invisible Cow</string>
+    <string name="find1">Find the Invisible Goat</string>
+    <string name="find2">Find the Invisible Doge</string>
+    <string name="find3">Find the Invisible Velociraptor</string>
+    <string name="win">You won!</string>
 
 </resources>
