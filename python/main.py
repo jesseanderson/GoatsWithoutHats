@@ -80,7 +80,34 @@ class Game(object):
     pass
 
   def send_status(self, color):
-    pass
+    #VARIABLES TO CHANGE TO DETERMINE CORRECT VALUES
+    radius_ratio = .7
+    win_ring_radius = 10
+    WIN_SOUND = 9
+    ################################################
+    #Find the player
+    for p in self.players:
+      if(p[0] == color):
+        player_id = p[1]
+        break
+
+    pX, pY = self.vision.previous_locs[player_id]
+    aX, aY = self.vision.animal_locs[player_id]
+    h, w = self.vision.height, self.vision.width
+    radius = radius_ratio * (max(h,w)/2) - win_ring_radius
+    ring_size = radius / 9
+
+    dist = (((aX - pX)**2) + ((aY - pY)**2))**.5
+    #Check for win ring
+    if(dist < win_ring_radius):
+      return WIN_SOUND
+
+    #Shift towards center
+    dist -= win_ring_radius
+
+    sound_level = dist / ring_size
+
+    return 9 - sound_level
 
 if __name__ == '__main__':
   Game().run()
